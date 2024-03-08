@@ -1,0 +1,20 @@
+{
+    "name": "masoretic/masoretic",
+    "description": "A simple library manager software",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Masoretic\\Masoretic\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matheus Tavares"
+        }
+    ],
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.6",
+        "php-di/php-di": "^7.0"
+    }
+}
