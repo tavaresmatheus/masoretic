@@ -8,7 +8,7 @@ RUN apt-get update \
     git \
     zip \
     unzip \
-    && docker-php-ext-install pdo_pgsql
+    && docker-php-ext-install pdo_mysql
 
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
 
