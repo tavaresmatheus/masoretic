@@ -18,12 +18,11 @@ final class CreateUsersTable extends AbstractMigration
                 'uuid',
                 ['default' => Literal::from('UUID()')]
             )
-            ->addColumn('name', 'text', ['null' => false])
-            ->addColumn('email', 'text', ['null' => false])
-            ->addColumn('password', 'text', ['null' => false])
-            ->addColumn('created_at', 'datetime', ['null' => false])
-            ->addColumn('updated_at', 'datetime')
+            ->addColumn('name', 'string', ['null' => false, 'limit' => 255])
+            ->addColumn('email', 'string', ['null' => false, 'limit' => 255])
+            ->addColumn('password', 'string', ['null' => false, 'limit' => 255])
             ->addColumn('deleted', 'boolean', ['default' => 0])
+            ->addTimestamps()
             ->create();
     }
 }

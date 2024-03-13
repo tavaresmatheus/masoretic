@@ -4,22 +4,26 @@ declare(strict_types=1);
 
 namespace Masoretic\Controllers;
 
-use Masoretic\DBAL\Database;
+use Masoretic\Businesses\User\UserBusinessInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HelloWorldController
 {
-    protected Database $database;
+    protected UserBusinessInterface $userBusiness;
 
-    public function __construct(Database $database)
+    public function __construct(UserBusinessInterface $userBusiness)
     {
-        $this->database = $database;
+        $this->userBusiness = $userBusiness;
     }
 
     public function helloWorld(Request $request, Response $response): Response
     {
-        $response->getBody()->write('Hello world!');
+        $userCreated = json_encode(
+            $this->userBusiness->registerUser($request->getParsedBody())
+        );
+
+        $response->getBody()->write($userCreated);
         return $response;
     }
 }
