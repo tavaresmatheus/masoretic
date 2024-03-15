@@ -23,10 +23,10 @@ class UserRepository implements UserRepositoryInterface
             ->insert('users')
             ->values(
                 [
-                    'name' => '?',
-                    'email' => '?',
-                    'password' => '?',
-                    'deleted' => '?',
+                    'name' => ':name',
+                    'email' => ':email',
+                    'password' => ':password',
+                    'deleted' => ':deleted',
                 ]
             )
             ->setParameter('name', $user->getName())
@@ -53,14 +53,20 @@ class UserRepository implements UserRepositoryInterface
 
     public function loadByEmail(string $email): array
     {
-        return $this->database->getQueryBuilder()
+        $result = $this->database->getQueryBuilder()
             ->select('user_id, name, email')
             ->from('users')
-            ->where('deleted = ?')
-            ->andWhere('email = ?')
+            ->where('deleted = :deleted')
+            ->andWhere('email = :email')
             ->setParameter('deleted', 0)
             ->setParameter('email', $email)
-            ->fetchOne();
+            ->fetchAssociative();
+
+        if ($result === false) {
+            return [];
+        }
+
+        return $result;
     }
 
     public function list(): array

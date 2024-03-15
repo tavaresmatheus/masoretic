@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-use Masoretic\Controllers\HelloWorldController;
+use Masoretic\Controllers\UserController;
 
-$app->get('/', HelloWorldController::class . ':helloWorld');
+$app->get('/', UserController::class . ':register');

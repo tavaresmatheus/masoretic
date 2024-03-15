@@ -8,7 +8,7 @@ use Masoretic\Businesses\User\UserBusinessInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class HelloWorldController
+class UserController
 {
     protected UserBusinessInterface $userBusiness;
 
@@ -17,7 +17,7 @@ class HelloWorldController
         $this->userBusiness = $userBusiness;
     }
 
-    public function helloWorld(Request $request, Response $response): Response
+    public function register(Request $request, Response $response): Response
     {
         $userCreated = json_encode(
             $this->userBusiness->registerUser($request->getParsedBody())
