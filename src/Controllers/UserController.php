@@ -17,7 +17,7 @@ class UserController
         $this->userBusiness = $userBusiness;
     }
 
-    public function register(Request $request, Response $response): Response
+    public function registerUser(Request $request, Response $response): Response
     {
         $userCreated = json_encode(
             $this->userBusiness->registerUser(
@@ -27,6 +27,19 @@ class UserController
         );
 
         $response->getBody()->write($userCreated);
+        return $response;
+    }
+
+    public function showUser(Request $request, Response $response, array $urlParam): Response
+    {
+        $userShowed = json_encode(
+            $this->userBusiness->getUser(
+                $request,
+                $urlParam['id']
+            )
+        );
+
+        $response->getBody()->write($userShowed);
         return $response;
     }
 }

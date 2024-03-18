@@ -13,7 +13,11 @@ interface UserBusinessInterface
         ServerRequestInterface $request,
         array $attributes
     ): array;
-    // public function getUser(string $userId): User;
+
+    public function getUser(
+        ServerRequestInterface $request,
+        string $userId
+    ): array;
     // public function listUsers(): array;
     // public function updateUser(array $attributes): User;
     // public function deleteUser(string $userId): bool;

@@ -41,14 +41,20 @@ class UserRepository implements UserRepositoryInterface
 
     public function load(string $userId): array
     {
-        return $this->database->getQueryBuilder()
+        $result = $this->database->getQueryBuilder()
             ->select('user_id, name, email')
             ->from('users')
-            ->where('deleted = ?')
-            ->andWhere('user_id = ?')
+            ->where('deleted = :deleted')
+            ->andWhere('user_id = :user_id')
             ->setParameter('deleted', 0)
             ->setParameter('user_id', $userId)
-            ->fetchOne();
+            ->fetchAssociative();
+
+        if ($result === false) {
+            return [];
+        }
+
+        return $result;
     }
 
     public function loadByEmail(string $email): array

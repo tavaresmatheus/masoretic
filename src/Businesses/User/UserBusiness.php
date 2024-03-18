@@ -8,6 +8,7 @@ use Masoretic\Exceptions\DomainRuleException;
 use Masoretic\Models\User;
 use Masoretic\Repositories\User\UserRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpNotFoundException;
 
 class UserBusiness implements UserBusinessInterface
 {
@@ -28,28 +29,36 @@ class UserBusiness implements UserBusinessInterface
             throw new DomainRuleException(
                 $request,
                 409,
-                'Email already in use'
+                'Email already in use.'
             );
         }
 
         if (
             preg_match(
-                '/^[a-z0-9.!#$&\'*+\/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/',
+                '/^[a-z0-9.!#$&\'*+\/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}' .
+                '[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/',
                 $attributes['email']
             ) !== 1
         ) {
-            throw new \Exception('Invalid email', 422);
+            throw new DomainRuleException(
+                $request,
+                422,
+                'Invalid email.'
+            );
         }
 
         if (
             preg_match(
-                '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[a-zA-Z])(?=.*\W).{11,30}$/',
+                '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[a-zA-Z])' .
+                '(?=.*\W).{11,30}$/',
                 $attributes['password']
             ) !== 1
         ) {
-            throw new \Exception(
-                'Invalid password, need a lower letter, upper letter, special char and length min 11 to 30 max',
-                422
+            throw new DomainRuleException(
+                $request,
+                422,
+                'Invalid password, need a lower letter, upper letter, ' .
+                'special char and length min 11 to 30 max'
             );
         }
 
@@ -66,5 +75,29 @@ class UserBusiness implements UserBusinessInterface
         $this->userRepository->create($user);
 
         return $this->userRepository->loadByEmail($user->getEmail());
+    }
+
+    public function getUser(
+        ServerRequestInterface $request,
+        string $userId
+    ): array
+    {
+        if (
+            preg_match(
+                '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]' .
+                '{4}-[0-9A-Fa-f]{12}$/',
+                $userId
+            ) !== 1
+        ) {
+            throw new DomainRuleException($request, 422, 'Invalid user id.');
+        }
+
+        $user = $this->userRepository->load($userId);
+
+        if ($user === []) {
+            throw new DomainRuleException($request, 404, 'User don\'t exists');
+        }
+
+        return $user;
     }
 }
