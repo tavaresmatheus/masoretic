@@ -30,7 +30,11 @@ class UserController
         return $response;
     }
 
-    public function showUser(Request $request, Response $response, array $urlParam): Response
+    public function showUser(
+        Request $request,
+        Response $response,
+        array $urlParam
+    ): Response
     {
         $userShowed = json_encode(
             $this->userBusiness->getUser(
@@ -40,6 +44,14 @@ class UserController
         );
 
         $response->getBody()->write($userShowed);
+        return $response;
+    }
+
+    public function listUsers(Request $request, Response $response): Response
+    {
+        $usersListed = ['users' => $this->userBusiness->listUsers()];
+        $usersListed = json_encode($usersListed);
+        $response->getBody()->write($usersListed);
         return $response;
     }
 }

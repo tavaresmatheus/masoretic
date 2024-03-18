@@ -80,7 +80,7 @@ class UserRepository implements UserRepositoryInterface
         return $this->database->getQueryBuilder()
             ->select('user_id, name, email')
             ->from('users')
-            ->where('deleted = ?')
+            ->where('deleted = :deleted')
             ->setParameter('deleted', 0)
             ->fetchAllAssociative();
     }

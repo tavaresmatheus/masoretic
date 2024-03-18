@@ -100,4 +100,11 @@ class UserBusiness implements UserBusinessInterface
 
         return $user;
     }
+
+    public function listUsers(): array
+    {
+        $users = $this->userRepository->list();
+
+        return $users;
+    }
 }
