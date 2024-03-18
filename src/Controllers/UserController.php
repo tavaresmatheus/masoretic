@@ -54,4 +54,22 @@ class UserController
         $response->getBody()->write($usersListed);
         return $response;
     }
+
+    public function updateUser(
+        Request $request,
+        Response $response,
+        array $urlParam
+    ): Response
+    {
+        $userUpdated = json_encode(
+            $this->userBusiness->updateUser(
+                $request,
+                $urlParam['id'],
+                $request->getParsedBody()
+            )
+        );
+
+        $response->getBody()->write($userUpdated);
+        return $response;
+    }
 }

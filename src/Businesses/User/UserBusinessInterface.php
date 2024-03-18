@@ -20,6 +20,11 @@ interface UserBusinessInterface
     ): array;
 
     public function listUsers(): array;
-    // public function updateUser(array $attributes): User;
+
+    public function updateUser(
+        ServerRequestInterface $request,
+        string $userId,
+        array $attributes
+    ): array;
     // public function deleteUser(string $userId): bool;
 }

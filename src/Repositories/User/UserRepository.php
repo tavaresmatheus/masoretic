@@ -89,21 +89,16 @@ class UserRepository implements UserRepositoryInterface
     {
         $this->database->getQueryBuilder()
             ->update('users')
-            ->values(
-                [
-                    'name' => '?',
-                    'email' => '?',
-                    'password' => '?',
-                    'updatedAt' => '?',
-                ]
-            )
-            ->where('deleted = ?')
-            ->andWhere('user_id = ?')
-            ->setParameter('deleted', 0)
-            ->setParameter('user_id', $user->getId())
+            ->set('name', ':name')
+            ->set('email', ':email')
+            ->set('password', ':password')
+            ->where('deleted = :deleted')
+            ->andWhere('user_id = :user_id')
             ->setParameter('name', $user->getName())
             ->setParameter('email', $user->getEmail())
             ->setParameter('password', $user->getPassword())
+            ->setParameter('deleted', 0)
+            ->setParameter('user_id', $user->getId())
             ->executeStatement();
 
         return $this->load($user->getId());
