@@ -15,9 +15,9 @@ class ContentTypeJsonMiddleware
         RequestHandler $handler
     ): Response
     {
-        header('Content-Type: application/json');
         $response = $handler->handle($request);
-        $response = new Response();
+        $response->withHeader('Content-Type', 'application/json');
+
         return $response;
     }
 }

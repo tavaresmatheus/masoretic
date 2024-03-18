@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Masoretic\Businesses\User;
 
+use Masoretic\Exceptions\DomainRuleException;
 use Masoretic\Models\User;
 use Masoretic\Repositories\User\UserRepositoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class UserBusiness implements UserBusinessInterface
 {
@@ -16,11 +18,18 @@ class UserBusiness implements UserBusinessInterface
         $this->userRepository = $userRepository;
     }
 
-    public function registerUser(array $attributes): array
+    public function registerUser(
+        ServerRequestInterface $request,
+        array $attributes
+    ): array
     {
         $emailExists = $this->userRepository->loadByEmail($attributes['email']);
         if ($emailExists !== []) {
-            throw new \Exception('Email already in use', 409);
+            throw new DomainRuleException(
+                $request,
+                409,
+                'Email already in use'
+            );
         }
 
         if (
@@ -48,7 +57,7 @@ class UserBusiness implements UserBusinessInterface
             null,
             $attributes['name'],
             $attributes['email'],
-            $attributes['password'],
+            password_hash($attributes['password'], PASSWORD_DEFAULT),
             null,
             null,
             null

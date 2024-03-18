@@ -20,7 +20,10 @@ class UserController
     public function register(Request $request, Response $response): Response
     {
         $userCreated = json_encode(
-            $this->userBusiness->registerUser($request->getParsedBody())
+            $this->userBusiness->registerUser(
+                $request,
+                $request->getParsedBody()
+            )
         );
 
         $response->getBody()->write($userCreated);
