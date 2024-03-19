@@ -72,4 +72,25 @@ class UserController
         $response->getBody()->write($userUpdated);
         return $response;
     }
+
+    public function deleteUser(
+        Request $request,
+        Response $response,
+        array $urlParam
+    ): Response
+    {
+        $userDeleted = [
+            'user' => $urlParam['id'],
+            'deleted' => $this->userBusiness->deleteUser(
+                $request,
+                $urlParam['id'],
+                $request->getParsedBody()
+            )
+        ];
+
+        $userDeleted = json_encode($userDeleted);
+
+        $response->getBody()->write($userDeleted);
+        return $response;
+    }
 }

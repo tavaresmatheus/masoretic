@@ -94,6 +94,27 @@ class UserBusiness implements UserBusinessInterface
         return $this->userRepository->update($updatedUser);
     }
 
+    public function deleteUser(
+        ServerRequestInterface $request,
+        string $userId
+    ): bool
+    {
+        $this->validateUserId($request, $userId);
+
+        $user = $this->userRepository->load($userId);
+        if ($user === []) {
+            throw new DomainRuleException($request, 404, 'User don\'t exists.');
+        }
+
+        $deletion = $this->userRepository->delete($userId);
+
+        if ($deletion <= 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function validateEmailUniqueness(
         ServerRequestInterface $request,
         string $email

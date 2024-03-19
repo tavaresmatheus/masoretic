@@ -104,15 +104,14 @@ class UserRepository implements UserRepositoryInterface
         return $this->load($user->getId());
     }
 
-    public function delete(User $user): int
+    public function delete(string $userId): int
     {
         return $this->database->getQueryBuilder()
             ->update('users')
-            ->setValue('deleted', '?')
-            ->where('deleted = ?')
-            ->andWhere('user_id = ?')
-            ->setParameter('deleted', 0)
-            ->setParameter('user_id', $user->getId())
+            ->set('deleted', ':deleted')
+            ->where('user_id = :user_id')
+            ->setParameter('deleted', 1)
+            ->setParameter('user_id', $userId)
             ->executeStatement();
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Masoretic\Businesses\User;
 
-use Masoretic\Models\User;
 use Psr\Http\Message\ServerRequestInterface;
 
 interface UserBusinessInterface
@@ -26,5 +25,9 @@ interface UserBusinessInterface
         string $userId,
         array $attributes
     ): array;
-    // public function deleteUser(string $userId): bool;
+
+    public function deleteUser(
+        ServerRequestInterface $request,
+        string $userId
+    ): bool;
 }

@@ -13,5 +13,5 @@ interface UserRepositoryInterface
     public function loadByEmail(string $email): array;
     public function list(): array;
     public function update(User $user): array;
-    public function delete(User $user): int;
+    public function delete(string $userId): int;
 }
