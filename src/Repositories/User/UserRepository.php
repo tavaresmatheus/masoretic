@@ -16,7 +16,7 @@ class UserRepository implements UserRepositoryInterface
         $this->database = $database;
     }
 
-    public function create(User $user): int
+    public function create(array $user): int
     {
         try {
             return $this->database->getQueryBuilder()
@@ -29,9 +29,9 @@ class UserRepository implements UserRepositoryInterface
                     'deleted' => ':deleted',
                 ]
             )
-            ->setParameter('name', $user->getName())
-            ->setParameter('email', $user->getEmail())
-            ->setParameter('password', $user->getPassword())
+            ->setParameter('name', $user['name'])
+            ->setParameter('email', $user['email'])
+            ->setParameter('password', $user['password'])
             ->setParameter('deleted', 0)
             ->executeStatement();
         } catch (\Exception $e) {
@@ -85,7 +85,7 @@ class UserRepository implements UserRepositoryInterface
             ->fetchAllAssociative();
     }
 
-    public function update(User $user): array
+    public function update(array $user): array
     {
         $this->database->getQueryBuilder()
             ->update('users')
@@ -94,14 +94,14 @@ class UserRepository implements UserRepositoryInterface
             ->set('password', ':password')
             ->where('deleted = :deleted')
             ->andWhere('user_id = :user_id')
-            ->setParameter('name', $user->getName())
-            ->setParameter('email', $user->getEmail())
-            ->setParameter('password', $user->getPassword())
+            ->setParameter('name', $user['name'])
+            ->setParameter('email', $user['email'])
+            ->setParameter('password', $user['password'])
             ->setParameter('deleted', 0)
-            ->setParameter('user_id', $user->getId())
+            ->setParameter('user_id', $user['userId'])
             ->executeStatement();
 
-        return $this->load($user->getId());
+        return $this->load($user['userId']);
     }
 
     public function delete(string $userId): int

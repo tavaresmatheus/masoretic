@@ -8,10 +8,10 @@ use Masoretic\Models\User;
 
 interface UserRepositoryInterface
 {
-    public function create(User $user): int;
+    public function create(array $user): int;
     public function load(string $id): array;
     public function loadByEmail(string $email): array;
     public function list(): array;
-    public function update(User $user): array;
+    public function update(array $user): array;
     public function delete(string $userId): int;
 }

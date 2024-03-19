@@ -27,19 +27,18 @@ class UserBusiness implements UserBusinessInterface
         $this->validateEmail($request, $attributes['email']);
         $this->validatePassword($request, $attributes['password']);
 
-        $user = new User(
-            null,
-            $attributes['name'],
-            $attributes['email'],
-            password_hash($attributes['password'], PASSWORD_DEFAULT),
-            null,
-            null,
-            null
-        );
+        $user = [
+            'name' => $attributes['name'],
+            'email' => $attributes['email'],
+            'password' => password_hash(
+                $attributes['password'],
+                PASSWORD_DEFAULT
+            ),
+        ];
 
         $this->userRepository->create($user);
 
-        return $this->userRepository->loadByEmail($user->getEmail());
+        return $this->userRepository->loadByEmail($user['email']);
     }
 
     public function getUser(
@@ -82,15 +81,13 @@ class UserBusiness implements UserBusinessInterface
         $this->validateEmail($request, $attributes['email']);
         $this->validatePassword($request, $attributes['password']);
 
-        $updatedUser = new User(
-            $user['user_id'],
-            $attributes['name'],
-            $attributes['email'],
-            $attributes['password'],
-            null,
-            null,
-            null
-        );
+        $updatedUser = [
+            'userId' => $user['user_id'],
+            'name' => $attributes['name'],
+            'email' => $attributes['email'],
+            'password' => $attributes['password'],
+        ];
+
         return $this->userRepository->update($updatedUser);
     }
 
