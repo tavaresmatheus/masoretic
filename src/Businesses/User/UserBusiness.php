@@ -5,17 +5,22 @@ declare(strict_types=1);
 namespace Masoretic\Businesses\User;
 
 use Masoretic\Exceptions\DomainRuleException;
-use Masoretic\Models\User;
 use Masoretic\Repositories\User\UserRepositoryInterface;
+use Masoretic\Validations\User\UserValidationInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class UserBusiness implements UserBusinessInterface
 {
     protected UserRepositoryInterface $userRepository;
+    protected UserValidationInterface $userValidation;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        UserValidationInterface $userValidation
+    )
     {
         $this->userRepository = $userRepository;
+        $this->userValidation = $userValidation;
     }
 
     public function registerUser(
@@ -23,9 +28,12 @@ class UserBusiness implements UserBusinessInterface
         array $attributes
     ): array
     {
-        $this->validateEmailUniqueness($request, $attributes['email']);
-        $this->validateEmail($request, $attributes['email']);
-        $this->validatePassword($request, $attributes['password']);
+        $this->checkEmailUniqueness($request, $attributes['email']);
+        $this->userValidation->validateEmail($request, $attributes['email']);
+        $this->userValidation->validatePassword(
+            $request,
+            $attributes['password']
+        );
 
         $user = [
             'name' => $attributes['name'],
@@ -46,7 +54,7 @@ class UserBusiness implements UserBusinessInterface
         string $userId
     ): array
     {
-        $this->validateUserId($request, $userId);
+        $this->userValidation->validateUserId($request, $userId);
 
         $user = $this->userRepository->load($userId);
 
@@ -70,16 +78,19 @@ class UserBusiness implements UserBusinessInterface
         array $attributes
     ): array
     {
-        $this->validateUserId($request, $userId);
+        $this->userValidation->validateUserId($request, $userId);
 
         $user = $this->userRepository->load($userId);
         if ($user === []) {
             throw new DomainRuleException($request, 404, 'User don\'t exists.');
         }
 
-        $this->validateEmailUniqueness($request, $attributes['email']);
-        $this->validateEmail($request, $attributes['email']);
-        $this->validatePassword($request, $attributes['password']);
+        $this->checkEmailUniqueness($request, $attributes['email']);
+        $this->userValidation->validateEmail($request, $attributes['email']);
+        $this->userValidation->validatePassword(
+            $request,
+            $attributes['password']
+        );
 
         $updatedUser = [
             'userId' => $user['user_id'],
@@ -96,7 +107,7 @@ class UserBusiness implements UserBusinessInterface
         string $userId
     ): bool
     {
-        $this->validateUserId($request, $userId);
+        $this->userValidation->validateUserId($request, $userId);
 
         $user = $this->userRepository->load($userId);
         if ($user === []) {
@@ -112,7 +123,7 @@ class UserBusiness implements UserBusinessInterface
         return true;
     }
 
-    public function validateEmailUniqueness(
+    public function checkEmailUniqueness(
         ServerRequestInterface $request,
         string $email
     ): void
@@ -124,63 +135,6 @@ class UserBusiness implements UserBusinessInterface
                 409,
                 'Email already in use.'
             );
-        }
-    }
-
-    public function validateEmail(
-        ServerRequestInterface $request,
-        string $email
-    ): void
-    {
-        if (
-            preg_match(
-                '/^[a-z0-9.!#$&\'*+\/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}' .
-                '[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/',
-                $email
-            ) !== 1
-        ) {
-            throw new DomainRuleException(
-                $request,
-                422,
-                'Invalid email.'
-            );
-        }
-    }
-
-    public function validatePassword(
-        ServerRequestInterface $request,
-        string $password
-    ): void
-    {
-        if (
-            preg_match(
-                '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[a-zA-Z])' .
-                '(?=.*\W).{11,30}$/',
-                $password
-            ) !== 1
-        ) {
-            throw new DomainRuleException(
-                $request,
-                422,
-                'Invalid password, need a lower letter, upper letter, ' .
-                'special char and length min 11 to 30 max.'
-            );
-        }
-    }
-
-    public function validateUserId(
-        ServerRequestInterface $request,
-        string $userId
-    ): void
-    {
-        if (
-            preg_match(
-                '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]' .
-                '{4}-[0-9A-Fa-f]{12}$/',
-                $userId
-            ) !== 1
-        ) {
-            throw new DomainRuleException($request, 422, 'Invalid user id.');
         }
     }
 }
