@@ -8,11 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 interface UserBusinessInterface
 {
-    public function registerUser(
-        ServerRequestInterface $request,
-        array $attributes
-    ): array;
-
     public function getUser(
         ServerRequestInterface $request,
         string $userId

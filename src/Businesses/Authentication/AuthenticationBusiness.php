@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Masoretic\Businesses\User;
+namespace Masoretic\Businesses\Authentication;
 
+use Dotenv\Dotenv;
+use Firebase\JWT\JWT;
 use Masoretic\Exceptions\DomainRuleException;
 use Masoretic\Repositories\User\UserRepositoryInterface;
 use Masoretic\Validations\User\UserValidationInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class UserBusiness implements UserBusinessInterface
+class AuthenticationBusiness implements AuthenticationBusinessInterface
 {
     protected UserRepositoryInterface $userRepository;
     protected UserValidationInterface $userValidation;
@@ -23,42 +25,51 @@ class UserBusiness implements UserBusinessInterface
         $this->userValidation = $userValidation;
     }
 
-    public function getUser(
+    public function authenticate(
         ServerRequestInterface $request,
-        string $userId
-    ): array
+        string $email,
+        string $password
+    ): string
     {
-        $this->userValidation->validateUserId($request, $userId);
-
-        $user = $this->userRepository->load($userId);
-
+        $user = $this->userRepository->loadByEmail($email);
         if ($user === []) {
-            throw new DomainRuleException($request, 404, 'User don\'t exists.');
+            throw new DomainRuleException(
+                $request,
+                403,
+                'Invalid credentials.'
+            );
         }
 
-        return $user;
+        if (! password_verify($password, $user['password'])) {
+            throw new DomainRuleException(
+                $request,
+                403,
+                'Invalid credentials.'
+            );
+        }
+
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+        $dotenv->safeLoad();
+        $secretJwtKey = $_ENV['SECRET_JWT_KEY'];
+        $jwtAlgorithm = $_ENV['JWT_ALGORITHM'];
+
+        $payload = [
+            'iis' => 'http://example.org',
+            'aud' => 'http://example.com',
+            'sub' => $user['user_id'],
+            'iat' => time(),
+            'nbf' => time(),
+            'exp' => time() + 3600 //1h
+        ];
+
+        return JWT::encode($payload, $secretJwtKey, $jwtAlgorithm);
     }
 
-    public function listUsers(): array
-    {
-        $users = $this->userRepository->list();
-
-        return $users;
-    }
-
-    public function updateUser(
+    public function register(
         ServerRequestInterface $request,
-        string $userId,
         array $attributes
     ): array
     {
-        $this->userValidation->validateUserId($request, $userId);
-
-        $user = $this->userRepository->load($userId);
-        if ($user === []) {
-            throw new DomainRuleException($request, 404, 'User don\'t exists.');
-        }
-
         $this->checkEmailUniqueness($request, $attributes['email']);
         $this->userValidation->validateEmail($request, $attributes['email']);
         $this->userValidation->validatePassword(
@@ -66,35 +77,18 @@ class UserBusiness implements UserBusinessInterface
             $attributes['password']
         );
 
-        $updatedUser = [
-            'userId' => $user['user_id'],
+        $user = [
             'name' => $attributes['name'],
             'email' => $attributes['email'],
-            'password' => $attributes['password'],
+            'password' => password_hash(
+                $attributes['password'],
+                PASSWORD_DEFAULT
+            ),
         ];
 
-        return $this->userRepository->update($updatedUser);
-    }
+        $this->userRepository->create($user);
 
-    public function deleteUser(
-        ServerRequestInterface $request,
-        string $userId
-    ): bool
-    {
-        $this->userValidation->validateUserId($request, $userId);
-
-        $user = $this->userRepository->load($userId);
-        if ($user === []) {
-            throw new DomainRuleException($request, 404, 'User don\'t exists.');
-        }
-
-        $deletion = $this->userRepository->delete($userId);
-
-        if ($deletion <= 0) {
-            return false;
-        }
-
-        return true;
+        return $this->userRepository->loadByEmail($user['email']);
     }
 
     public function checkEmailUniqueness(

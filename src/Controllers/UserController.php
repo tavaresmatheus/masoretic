@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Masoretic\Controllers;
 
 use Masoretic\Businesses\User\UserBusinessInterface;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class UserController
 {
@@ -17,24 +17,11 @@ class UserController
         $this->userBusiness = $userBusiness;
     }
 
-    public function registerUser(Request $request, Response $response): Response
-    {
-        $userCreated = json_encode(
-            $this->userBusiness->registerUser(
-                $request,
-                $request->getParsedBody()
-            )
-        );
-
-        $response->getBody()->write($userCreated);
-        return $response;
-    }
-
     public function showUser(
-        Request $request,
-        Response $response,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
         array $urlParam
-    ): Response
+    ): ResponseInterface
     {
         $userShowed = json_encode(
             $this->userBusiness->getUser(
@@ -47,7 +34,10 @@ class UserController
         return $response;
     }
 
-    public function listUsers(Request $request, Response $response): Response
+    public function listUsers(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): ResponseInterface
     {
         $usersListed = ['users' => $this->userBusiness->listUsers()];
         $usersListed = json_encode($usersListed);
@@ -56,10 +46,10 @@ class UserController
     }
 
     public function updateUser(
-        Request $request,
-        Response $response,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
         array $urlParam
-    ): Response
+    ): ResponseInterface
     {
         $userUpdated = json_encode(
             $this->userBusiness->updateUser(
@@ -74,10 +64,10 @@ class UserController
     }
 
     public function deleteUser(
-        Request $request,
-        Response $response,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
         array $urlParam
-    ): Response
+    ): ResponseInterface
     {
         $userDeleted = [
             'user' => $urlParam['id'],

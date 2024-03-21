@@ -42,7 +42,7 @@ class UserRepository implements UserRepositoryInterface
     public function load(string $userId): array
     {
         $result = $this->database->getQueryBuilder()
-            ->select('user_id, name, email')
+            ->select('user_id, name, email', 'password')
             ->from('users')
             ->where('deleted = :deleted')
             ->andWhere('user_id = :user_id')
@@ -60,7 +60,7 @@ class UserRepository implements UserRepositoryInterface
     public function loadByEmail(string $email): array
     {
         $result = $this->database->getQueryBuilder()
-            ->select('user_id, name, email')
+            ->select('user_id, name, email', 'password')
             ->from('users')
             ->where('deleted = :deleted')
             ->andWhere('email = :email')

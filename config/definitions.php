@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use Masoretic\Businesses\Authentication\AuthenticationBusiness;
+use Masoretic\Businesses\Authentication\AuthenticationBusinessInterface;
 use Masoretic\Businesses\User\UserBusiness;
 use Masoretic\Businesses\User\UserBusinessInterface;
+use Masoretic\Controllers\AuthenticationController;
 use Masoretic\Controllers\UserController;
 use Masoretic\DBAL\Configurations;
 use Masoretic\DBAL\Database;
@@ -22,4 +25,8 @@ return [
     UserRepositoryInterface::class => autowire(UserRepository::class),
     UserBusinessInterface::class => autowire(UserBusiness::class),
     UserValidationInterface::class => autowire(UserValidation::class),
+    'AuthenticationController' => create(AuthenticationController::class),
+    AuthenticationBusinessInterface::class => autowire(
+        AuthenticationBusiness::class
+    )
 ];
