@@ -7,11 +7,14 @@ use Masoretic\Businesses\Authentication\AuthenticationBusinessInterface;
 use Masoretic\Businesses\User\UserBusiness;
 use Masoretic\Businesses\User\UserBusinessInterface;
 use Masoretic\Controllers\AuthenticationController;
+use Masoretic\Controllers\EmailConfirmationController;
 use Masoretic\Controllers\UserController;
 use Masoretic\DBAL\Configurations;
 use Masoretic\DBAL\Database;
 use Masoretic\Repositories\User\UserRepository;
 use Masoretic\Repositories\User\UserRepositoryInterface;
+use Masoretic\Services\Email\EmailService;
+use Masoretic\Services\Email\EmailServiceInterface;
 use Masoretic\Validations\User\UserValidation;
 use Masoretic\Validations\User\UserValidationInterface;
 
@@ -28,5 +31,6 @@ return [
     'AuthenticationController' => create(AuthenticationController::class),
     AuthenticationBusinessInterface::class => autowire(
         AuthenticationBusiness::class
-    )
+    ),
+    EmailServiceInterface::class => autowire(EmailService::class)
 ];

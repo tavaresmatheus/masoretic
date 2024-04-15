@@ -26,12 +26,16 @@ class UserRepository implements UserRepositoryInterface
                     'name' => ':name',
                     'email' => ':email',
                     'password' => ':password',
+                    'activation_hash' => ':activation_hash',
+                    'active' => ':active',
                     'deleted' => ':deleted',
                 ]
             )
             ->setParameter('name', $user['name'])
             ->setParameter('email', $user['email'])
             ->setParameter('password', $user['password'])
+            ->setParameter('activation_hash', $user['activationHash'])
+            ->setParameter('active', 0)
             ->setParameter('deleted', 0)
             ->executeStatement();
         } catch (\Exception $e) {

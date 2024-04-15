@@ -8,6 +8,7 @@ use Dotenv\Dotenv;
 use Firebase\JWT\JWT;
 use Masoretic\Exceptions\DomainRuleException;
 use Masoretic\Repositories\User\UserRepositoryInterface;
+use Masoretic\Services\Email\EmailServiceInterface;
 use Masoretic\Validations\User\UserValidationInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -15,14 +16,17 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
 {
     protected UserRepositoryInterface $userRepository;
     protected UserValidationInterface $userValidation;
+    protected EmailServiceInterface $emailService;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
-        UserValidationInterface $userValidation
+        UserValidationInterface $userValidation,
+        EmailServiceInterface $emailService
     )
     {
         $this->userRepository = $userRepository;
         $this->userValidation = $userValidation;
+        $this->emailService = $emailService;
     }
 
     public function authenticate(
@@ -54,8 +58,8 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
         $jwtAlgorithm = $_ENV['JWT_ALGORITHM'];
 
         $payload = [
-            'iis' => 'http://example.org',
-            'aud' => 'http://example.com',
+            'iis' => $_ENV['APP_URL'],
+            'aud' => $_ENV['APP_URL'],
             'sub' => $user['user_id'],
             'iat' => time(),
             'nbf' => time(),
@@ -84,9 +88,33 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
                 $attributes['password'],
                 PASSWORD_DEFAULT
             ),
+            'activationHash' => md5(bin2hex(random_bytes(16)))
         ];
 
         $this->userRepository->create($user);
+
+        $this->emailService->sendConfirmationEmail(
+            'tavares.matheus.sp@gmail.com',
+            $user['name'],
+            'Email confirmation - Masoretic Library Platform',
+            '<link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link
+                href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+                rel="stylesheet"
+            >
+            <style>
+                body {
+                    font-family: \'Roboto\', sans-serif;
+                }
+            </style>
+            <h1>We are happy to have you with us!</h1>
+            <div>
+                <p>Confirm your e-mail giving the code below in our platform:</p>
+                <div><span><b>' . $user['activationHash'] . '</b></span></div>
+                <p>It\'s ok, you don\'t need to remeber it, just paste it on your register form.</p>
+            </div>'
+        );
 
         return $this->userRepository->loadByEmail($user['email']);
     }

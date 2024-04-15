@@ -21,6 +21,12 @@ final class CreateUsersTable extends AbstractMigration
             ->addColumn('name', 'string', ['null' => false, 'limit' => 255])
             ->addColumn('email', 'string', ['null' => false, 'limit' => 255])
             ->addColumn('password', 'string', ['null' => false, 'limit' => 255])
+            ->addColumn(
+                'activation_hash',
+                'string',
+                ['null' => false, 'limit' => 32]
+            )
+            ->addColumn('active', 'boolean', ['default' => 0])
             ->addColumn('deleted', 'boolean', ['default' => 0])
             ->addTimestamps()
             ->create();

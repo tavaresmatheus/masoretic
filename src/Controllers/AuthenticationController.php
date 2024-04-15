@@ -42,6 +42,9 @@ class AuthenticationController
         ResponseInterface $response
     ): ResponseInterface
     {
+        $teste = md5(bin2hex(random_bytes(16)));
+        var_dump($teste);
+        var_dump(strlen($teste));exit;
         $userCreated = json_encode(
             $this->authenticationBusiness->register(
                 $request,
