@@ -1,6 +1,6 @@
 <?php
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__);
 $dotenv->safeLoad();
 
 return
@@ -15,9 +15,9 @@ return
         'development' => [
             'adapter' => 'mysql',
             'host' => 'masoretic-mariadb',
-            'name' => $_ENV['MYSQL_DATABASE'],
-            'user' => $_ENV['MYSQL_USER'],
-            'pass' => $_ENV['MYSQL_ROOT_PASSWORD'],
+            'name' => getenv('MYSQL_DATABASE'),
+            'user' => getenv('MYSQL_USER'),
+            'pass' => getenv('MYSQL_ROOT_PASSWORD'),
             'port' => '3306',
             'charset' => 'utf8',
         ],

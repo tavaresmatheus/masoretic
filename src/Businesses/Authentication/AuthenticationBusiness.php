@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Masoretic\Businesses\Authentication;
 
-use Dotenv\Dotenv;
 use Firebase\JWT\JWT;
 use Masoretic\Exceptions\DomainRuleException;
 use Masoretic\Repositories\User\UserRepositoryInterface;
@@ -52,14 +51,12 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
             );
         }
 
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
-        $dotenv->safeLoad();
-        $secretJwtKey = $_ENV['SECRET_JWT_KEY'];
-        $jwtAlgorithm = $_ENV['JWT_ALGORITHM'];
+        $secretJwtKey = getenv('SECRET_JWT_KEY');
+        $jwtAlgorithm = getenv('JWT_ALGORITHM');
 
         $payload = [
-            'iis' => $_ENV['APP_URL'],
-            'aud' => $_ENV['APP_URL'],
+            'iis' => getenv('APP_URL'),
+            'aud' => getenv('APP_URL'),
             'sub' => $user['user_id'],
             'iat' => time(),
             'nbf' => time(),

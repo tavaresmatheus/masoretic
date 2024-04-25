@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Masoretic\Services\Email;
 
-use Dotenv\Dotenv;
 use SendGrid;
 use SendGrid\Mail\Mail;
 
@@ -20,15 +19,12 @@ class EmailService implements EmailServiceInterface
         string $body
     ): int
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
-        $dotenv->safeLoad();
-
         $email = new Mail();
         $email->setFrom(self::FROM, self::NAME);
         $email->setSubject($subject);
         $email->addTo($to, $name);
         $email->addContent('text/html', $body);
-        $sendGrid = new SendGrid($_ENV['SENDGRID_API_KEY']);
+        $sendGrid = new SendGrid(getenv('SENDGRID_API_KEY'));
 
         try {
             $response = $sendGrid->send($email);

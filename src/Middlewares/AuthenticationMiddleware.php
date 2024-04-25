@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Masoretic\Middlewares;
 
-use Dotenv\Dotenv;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Masoretic\Exceptions\AuthenticationException;
@@ -19,10 +18,8 @@ final class AuthenticationMiddleware
         RequestHandlerInterface $handler
     ): ResponseInterface
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
-        $dotenv->safeLoad();
-        $secretJwtKey = $_ENV['SECRET_JWT_KEY'];
-        $jwtAlgorithm = $_ENV['JWT_ALGORITHM'];
+        $secretJwtKey = getenv('SECRET_JWT_KEY');
+        $jwtAlgorithm = getenv('JWT_ALGORITHM');
 
         $jwt = $request->getHeader('Authorization')[0];
         $jwt = substr($jwt, 7, strlen($jwt));
@@ -37,10 +34,6 @@ final class AuthenticationMiddleware
             }
 
             JWT::decode($jwt, new Key($secretJwtKey, $jwtAlgorithm));
-
-            $response = $handler->handle($request);
-
-            return $response;
         } catch (\Throwable $th) {
             throw new AuthenticationException(
                 $request,
@@ -48,5 +41,9 @@ final class AuthenticationMiddleware
                 'Invalid/Expired token.'
             );
         }
+
+        $response = $handler->handle($request);
+
+        return $response;
     }
 }
