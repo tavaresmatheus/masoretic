@@ -14,13 +14,7 @@ class UserValidation implements UserValidationInterface
         string $email
     ): void
     {
-        if (
-            preg_match(
-                '/^[a-z0-9.!#$&\'*+\/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}' .
-                '[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/',
-                $email
-            ) !== 1
-        ) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             throw new DomainRuleException(
                 $request,
                 422,
