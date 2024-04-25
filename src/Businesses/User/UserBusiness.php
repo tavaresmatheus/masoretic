@@ -36,12 +36,18 @@ class UserBusiness implements UserBusinessInterface
             throw new DomainRuleException($request, 404, 'User don\'t exists.');
         }
 
+        unset($user['password']);
+
         return $user;
     }
 
     public function listUsers(): array
     {
         $users = $this->userRepository->list();
+
+        foreach ($users as $user) {
+            unset($user['password']);
+        }
 
         return $users;
     }
@@ -70,10 +76,17 @@ class UserBusiness implements UserBusinessInterface
             'userId' => $user['user_id'],
             'name' => $attributes['name'],
             'email' => $attributes['email'],
-            'password' => $attributes['password'],
+            'password' =>  password_hash(
+                $attributes['password'],
+                PASSWORD_DEFAULT
+            ),
         ];
 
-        return $this->userRepository->update($updatedUser);
+        $user = $this->userRepository->update($updatedUser);
+
+        unset($user['password']);
+
+        return $user;
     }
 
     public function deleteUser(
