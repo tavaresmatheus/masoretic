@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-mail confirmation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet"
+    >
+</head>
+<body
+    style="
+        font-family: \'Roboto\', sans-serif;
+        color: #141414;
+    "
+>
+    <h1>Hi, {{userName}}! We are happy to have you with us!</h1>
+    <div>
+        <p>Confirm your e-mail by clicking on the button below:</p>
+        <div>
+            <form action="{{linkToConfirm}}" method="post">
+                <button
+                    style="
+                        font-size: 1rem;
+                        font-weight: 200;
+                        letter-spacing: 0.063rem;
+                        padding: 0.813rem 1.25rem 0.813rem;
+                        outline: 0;
+                        border: 0.063rem solid black;
+                        border-radius: 0.5rem;
+                        cursor: pointer;
+                        position: relative;
+                        background-color: #f5df4d;
+                        user-select: none;
+                        -webkit-user-select: none;
+                        touch-action: manipulation;
+                    "
+                    name="confirm"
+                    value="{{activationHash}}"
+                >
+                    Confirm e-mail
+                </button>
+            </form>
+        </div>
+        <p>After the confirmation you can use our platform freely ;)</p>
+    </div>
+</body>
+</html>

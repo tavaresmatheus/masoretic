@@ -19,6 +19,11 @@ interface AuthenticationBusinessInterface
         array $attributes
     ): array;
 
+    public function confirmEmail(
+        ServerRequestInterface $request,
+        string $activationHash
+    ): bool;
+
     public function checkEmailUniqueness(
         ServerRequestInterface $request,
         string $email

@@ -88,32 +88,56 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
             'activationHash' => md5(bin2hex(random_bytes(16)))
         ];
 
-        $this->userRepository->create($user);
+        $emailTemplatePath = __DIR__ .
+            '/../../../templates/email-confirmation-template.html';
+        $emailTemplate = fopen($emailTemplatePath, 'r');
+        $emailTemplate = fread($emailTemplate, filesize($emailTemplatePath));
+        $email = str_replace('{{userName}}', $user['name'], $emailTemplate);
+        $email = str_replace(
+            '{{activationHash}}',
+            $user['activationHash'],
+            $email
+        );
+        $email = str_replace(
+            '{{linkToConfirm}}',
+            getenv('APP_URL') . '/api/confirm/' . $user['activationHash'],
+            $email
+        );
 
         $this->emailService->sendConfirmationEmail(
-            'tavares.matheus.sp@gmail.com',
+            $user['email'],
             $user['name'],
             'Email confirmation - Masoretic Library Platform',
-            '<link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link
-                href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
-                rel="stylesheet"
-            >
-            <style>
-                body {
-                    font-family: \'Roboto\', sans-serif;
-                }
-            </style>
-            <h1>We are happy to have you with us!</h1>
-            <div>
-                <p>Confirm your e-mail giving the code below in our platform:</p>
-                <div><span><b>' . $user['activationHash'] . '</b></span></div>
-                <p>It\'s ok, you don\'t need to remeber it, just paste it on your register form.</p>
-            </div>'
+            $email
         );
 
         return $this->userRepository->loadByEmail($user['email']);
+    }
+
+    public function confirmEmail(
+        ServerRequestInterface $request,
+        string $activationHash
+    ): bool
+    {
+        $user = $this->userRepository->loadByActivationHash($activationHash);
+
+        if ($user === []) {
+            throw new DomainRuleException(
+                $request,
+                422,
+                'Invalid activation hash.'
+            );
+        }
+
+        $user['active'] = 1;
+
+        $userConfirmatedEmail = $this->userRepository->update($user);
+
+        if ($userConfirmatedEmail === []) {
+            return false;
+        }
+
+        return true;
     }
 
     public function checkEmailUniqueness(

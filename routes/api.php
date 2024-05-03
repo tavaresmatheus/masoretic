@@ -17,4 +17,8 @@ $app->group('/api', function (RouteCollectorProxy $group) {
 
     $group->post('/login', AuthenticationController::class . ':authenticate');
     $group->post('/register', AuthenticationController::class . ':register');
+    $group->post(
+        '/confirm/{activationHash}',
+        AuthenticationController::class . ':emailConfirmation'
+    );
 });

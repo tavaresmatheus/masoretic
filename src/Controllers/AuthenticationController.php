@@ -31,7 +31,7 @@ class AuthenticationController
             $credentials['password']
         );
 
-        $authenticated = json_encode(['Authorized' => true, 'Token' => $jwt]);
+        $authenticated = json_encode(['authorized' => true, 'token' => $jwt]);
         $response->getBody()->write($authenticated);
 
         return $response;
@@ -50,6 +50,25 @@ class AuthenticationController
         );
 
         $response->getBody()->write($userCreated);
+        return $response;
+    }
+
+    public function emailConfirmation(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $urlParam
+    ): ResponseInterface
+    {
+        $emailConfirmated = $this->authenticationBusiness->confirmEmail(
+            $request,
+            $urlParam['activationHash']
+        );
+
+        $emailConfirmated = json_encode(
+            ['emailConfirmated' => $emailConfirmated]
+        );
+
+        $response->getBody()->write($emailConfirmated);
         return $response;
     }
 }

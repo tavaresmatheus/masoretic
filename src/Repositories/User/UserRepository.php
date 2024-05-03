@@ -64,13 +64,31 @@ class UserRepository implements UserRepositoryInterface
     public function loadByEmail(string $email): array
     {
         $result = $this->database->getQueryBuilder()
-            ->select('user_id, name, email', 'password')
+            ->select('user_id, name, email, password')
             ->from('users')
             ->where('deleted = :deleted')
             ->andWhere('email = :email')
             ->setParameter('deleted', 0)
             ->setParameter('email', $email)
             ->fetchAssociative();
+
+        if ($result === false) {
+            return [];
+        }
+
+        return $result;
+    }
+
+    public function loadByActivationHash(string $activationHash): array
+    {
+        $result = $this->database->getQueryBuilder()
+            ->select('user_id, name, email, password, active')
+            ->from('users')
+            ->where('deleted = :deleted')
+            ->andWhere('activation_hash = :activationHash')
+            ->setParameter('deleted', 0)
+            ->setParameter('activationHash', $activationHash)
+            ->fetchAllAssociative();
 
         if ($result === false) {
             return [];
@@ -96,11 +114,13 @@ class UserRepository implements UserRepositoryInterface
             ->set('name', ':name')
             ->set('email', ':email')
             ->set('password', ':password')
+            ->set('active', ':active')
             ->where('deleted = :deleted')
             ->andWhere('user_id = :user_id')
             ->setParameter('name', $user['name'])
             ->setParameter('email', $user['email'])
             ->setParameter('password', $user['password'])
+            ->setParameter('active', $user['active'])
             ->setParameter('deleted', 0)
             ->setParameter('user_id', $user['userId'])
             ->executeStatement();
