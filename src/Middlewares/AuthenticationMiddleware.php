@@ -21,6 +21,14 @@ final class AuthenticationMiddleware
         $secretJwtKey = getenv('SECRET_JWT_KEY');
         $jwtAlgorithm = getenv('JWT_ALGORITHM');
 
+        if (empty($request->getHeader('Authorization'))) {
+            throw new AuthenticationException(
+                $request,
+                403,
+                'Authorization header not found.'
+            );
+        }
+
         $jwt = $request->getHeader('Authorization')[0];
         $jwt = substr($jwt, 7, strlen($jwt));
 

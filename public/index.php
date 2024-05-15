@@ -22,7 +22,8 @@ $app = AppFactory::create();
 $app->addRoutingMiddleware();
 $app->addBodyParsingMiddleware();
 $app->add(new ContentTypeJsonMiddleware());
-$app->addErrorMiddleware(true, true, true);
+$app->addErrorMiddleware(true, true, true)
+    ->getDefaultErrorHandler()->forceContentType('application/json');
 
 require_once __DIR__ . '/../routes/api.php';
 
