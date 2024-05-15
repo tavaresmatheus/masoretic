@@ -1,10 +1,9 @@
-FROM php:8.3-fpm
+FROM php:8.3-fpm-alpine
 
 COPY . /var/www/html
 
-RUN apt-get update \
-    && apt-get install -y \
-    libpq-dev \
+RUN apk --no-cache update \
+    && apk add \
     git \
     zip \
     unzip \
@@ -14,6 +13,6 @@ RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
 
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-EXPOSE 8080
+RUN composer install
 
-CMD bash -c "composer install --no-interaction --no-plugins --no-scripts --no-dev --prefer-dist"
+EXPOSE 8080

@@ -88,28 +88,30 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
             'activationHash' => md5(bin2hex(random_bytes(16)))
         ];
 
-        $emailTemplatePath = __DIR__ .
-            '/../../../templates/email-confirmation-template.html';
-        $emailTemplate = fopen($emailTemplatePath, 'r');
-        $emailTemplate = fread($emailTemplate, filesize($emailTemplatePath));
-        $email = str_replace('{{userName}}', $user['name'], $emailTemplate);
-        $email = str_replace(
-            '{{activationHash}}',
-            $user['activationHash'],
-            $email
-        );
-        $email = str_replace(
-            '{{linkToConfirm}}',
-            getenv('APP_URL') . '/api/confirm/' . $user['activationHash'],
-            $email
-        );
-
-        $this->emailService->sendConfirmationEmail(
-            $user['email'],
-            $user['name'],
-            'Email confirmation - Masoretic Library Platform',
-            $email
-        );
+        if (getenv('APP_ENV') !== 'local') {
+            $emailTemplatePath = __DIR__ .
+                '/../../../templates/email-confirmation-template.html';
+            $emailTemplate = fopen($emailTemplatePath, 'r');
+            $emailTemplate = fread($emailTemplate, filesize($emailTemplatePath));
+            $email = str_replace('{{userName}}', $user['name'], $emailTemplate);
+            $email = str_replace(
+                '{{activationHash}}',
+                $user['activationHash'],
+                $email
+            );
+            $email = str_replace(
+                '{{linkToConfirm}}',
+                getenv('APP_URL') . '/api/confirm/' . $user['activationHash'],
+                $email
+            );
+    
+            $this->emailService->sendConfirmationEmail(
+                $user['email'],
+                $user['name'],
+                'Email confirmation - Masoretic Library Platform',
+                $email
+            );
+        }
 
         return $this->userRepository->loadByEmail($user['email']);
     }

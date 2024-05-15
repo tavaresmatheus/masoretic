@@ -14,10 +14,10 @@ final class CreateUsersTable extends AbstractMigration
             ['id' => false, 'primary_key' => ['user_id']]
         );
         $table->addColumn(
-                'user_id',
-                'uuid',
-                ['default' => Literal::from('UUID()')]
-            )
+            'user_id',
+            'uuid',
+            ['default' => Literal::from('UUID()')]
+        )
             ->addColumn('name', 'string', ['null' => false, 'limit' => 255])
             ->addColumn('email', 'string', ['null' => false, 'limit' => 255])
             ->addColumn('password', 'string', ['null' => false, 'limit' => 255])
