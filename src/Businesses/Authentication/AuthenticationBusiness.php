@@ -88,6 +88,8 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
             'activationHash' => md5(bin2hex(random_bytes(16)))
         ];
 
+        $this->userRepository->create($user);
+
         if (getenv('APP_ENV') !== 'local') {
             $emailTemplatePath = __DIR__ .
                 '/../../../templates/email-confirmation-template.html';
@@ -113,7 +115,10 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
             );
         }
 
-        return $this->userRepository->loadByEmail($user['email']);
+        $userCreated = $this->userRepository->loadByEmail($user['email']);
+        unset($userCreated['password']);
+
+        return $userCreated;
     }
 
     public function confirmEmail(
