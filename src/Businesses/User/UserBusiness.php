@@ -65,21 +65,28 @@ class UserBusiness implements UserBusinessInterface
             throw new DomainRuleException($request, 404, 'User don\'t exists.');
         }
 
-        $this->checkEmailUniqueness($request, $attributes['email']);
-        $this->userValidation->validateEmail($request, $attributes['email']);
-        $this->userValidation->validatePassword(
-            $request,
-            $attributes['password']
-        );
+        foreach ($attributes as $key => $value) {
+            if ($key === 'email') {
+                $this->checkEmailUniqueness($request, $value);
+                $this->userValidation->validateEmail($request, $value);
+            }
+
+            if ($key === 'password') {
+                $this->userValidation->validatePassword(
+                    $request,
+                    $value
+                );
+            }
+
+            $user[$key] = $value;
+        }
 
         $updatedUser = [
             'userId' => $user['user_id'],
-            'name' => $attributes['name'],
-            'email' => $attributes['email'],
-            'password' =>  password_hash(
-                $attributes['password'],
-                PASSWORD_DEFAULT
-            ),
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'password' => password_hash($user['password'], PASSWORD_DEFAULT),
+            'active' => $user['active']
         ];
 
         $user = $this->userRepository->update($updatedUser);

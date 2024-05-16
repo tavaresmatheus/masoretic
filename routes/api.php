@@ -11,7 +11,7 @@ $app->group('/api', function (RouteCollectorProxy $group) {
     $group->group('/users', function (RouteCollectorProxy $group) {
         $group->get('/{id}', UserController::class . ':showUser');
         $group->get('/', UserController::class . ':listUsers');
-        $group->put('/{id}', UserController::class . ':updateUser');
+        $group->patch('/{id}', UserController::class . ':updateUser');
         $group->delete('/{id}', UserController::class . ':deleteUser');
     })->add(new AuthenticationMiddleware());
 
