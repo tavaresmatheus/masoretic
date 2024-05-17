@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Masoretic\Repositories\User;
 
 use Masoretic\DBAL\Database;
-use Masoretic\Models\User;
 
 class UserRepository implements UserRepositoryInterface
 {
