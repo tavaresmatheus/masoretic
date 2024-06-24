@@ -17,8 +17,7 @@ class UserBusiness implements UserBusinessInterface
     public function __construct(
         UserRepositoryInterface $userRepository,
         UserValidationInterface $userValidation
-    )
-    {
+    ) {
         $this->userRepository = $userRepository;
         $this->userValidation = $userValidation;
     }
@@ -26,8 +25,7 @@ class UserBusiness implements UserBusinessInterface
     public function getUser(
         ServerRequestInterface $request,
         string $userId
-    ): array
-    {
+    ): array {
         $this->userValidation->validateUserId($request, $userId);
 
         $user = $this->userRepository->load($userId);
@@ -56,8 +54,7 @@ class UserBusiness implements UserBusinessInterface
         ServerRequestInterface $request,
         string $userId,
         array $attributes
-    ): array
-    {
+    ): array {
         $this->userValidation->validateUserId($request, $userId);
 
         $user = $this->userRepository->load($userId);
@@ -99,8 +96,7 @@ class UserBusiness implements UserBusinessInterface
     public function deleteUser(
         ServerRequestInterface $request,
         string $userId
-    ): bool
-    {
+    ): bool {
         $this->userValidation->validateUserId($request, $userId);
 
         $user = $this->userRepository->load($userId);
@@ -120,8 +116,7 @@ class UserBusiness implements UserBusinessInterface
     public function checkEmailUniqueness(
         ServerRequestInterface $request,
         string $email
-    ): void
-    {
+    ): void {
         $emailExists = $this->userRepository->loadByEmail($email);
         if ($emailExists !== []) {
             throw new DomainRuleException(

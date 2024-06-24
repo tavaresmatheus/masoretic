@@ -21,8 +21,7 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
         UserRepositoryInterface $userRepository,
         UserValidationInterface $userValidation,
         EmailServiceInterface $emailService
-    )
-    {
+    ) {
         $this->userRepository = $userRepository;
         $this->userValidation = $userValidation;
         $this->emailService = $emailService;
@@ -32,8 +31,7 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
         ServerRequestInterface $request,
         string $email,
         string $password
-    ): string
-    {
+    ): string {
         $user = $this->userRepository->loadByEmail($email);
         if ($user === []) {
             throw new DomainRuleException(
@@ -69,8 +67,7 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
     public function register(
         ServerRequestInterface $request,
         array $attributes
-    ): array
-    {
+    ): array {
         $this->checkEmailUniqueness($request, $attributes['email']);
         $this->userValidation->validateEmail($request, $attributes['email']);
         $this->userValidation->validatePassword(
@@ -106,7 +103,7 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
                 getenv('APP_URL') . '/api/confirm/' . $user['activationHash'],
                 $email
             );
-    
+
             $this->emailService->sendConfirmationEmail(
                 $user['email'],
                 $user['name'],
@@ -124,8 +121,7 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
     public function confirmEmail(
         ServerRequestInterface $request,
         string $activationHash
-    ): bool
-    {
+    ): bool {
         $user = $this->userRepository->loadByActivationHash($activationHash);
 
         if ($user === []) {
@@ -150,8 +146,7 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
     public function checkEmailUniqueness(
         ServerRequestInterface $request,
         string $email
-    ): void
-    {
+    ): void {
         $emailExists = $this->userRepository->loadByEmail($email);
         if ($emailExists !== []) {
             throw new DomainRuleException(

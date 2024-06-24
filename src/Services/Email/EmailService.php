@@ -17,8 +17,7 @@ class EmailService implements EmailServiceInterface
         string $name,
         string $subject,
         string $body
-    ): int
-    {
+    ): int {
         $email = new Mail();
         $email->setFrom(self::FROM, self::NAME);
         $email->setSubject($subject);
@@ -30,7 +29,7 @@ class EmailService implements EmailServiceInterface
             $response = $sendGrid->send($email);
             return $response->statusCode();
         } catch (\Exception $e) {
-            echo 'Caught exception: '. $e->getMessage() ."\n";
+            echo 'Caught exception: ' . $e->getMessage() . "\n";
         }
     }
 }

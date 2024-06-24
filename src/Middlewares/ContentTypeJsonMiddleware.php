@@ -13,8 +13,7 @@ final class ContentTypeJsonMiddleware
     public function __invoke(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $response = $handler->handle($request);
         $response->withHeader('Content-Type', 'application/json');
 

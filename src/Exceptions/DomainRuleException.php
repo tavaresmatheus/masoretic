@@ -21,8 +21,7 @@ class DomainRuleException extends HttpSpecializedException
         string $title,
         string $message = 'Domain rule exception.',
         string $description = 'Your request dont obey the domain rules.'
-    )
-    {
+    ) {
         $this->request = $request;
         $this->code = $code;
         $this->title = $title;

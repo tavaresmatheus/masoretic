@@ -12,8 +12,7 @@ class UserValidation implements UserValidationInterface
     public function validateEmail(
         ServerRequestInterface $request,
         string $email
-    ): void
-    {
+    ): void {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             throw new DomainRuleException(
                 $request,
@@ -26,8 +25,7 @@ class UserValidation implements UserValidationInterface
     public function validatePassword(
         ServerRequestInterface $request,
         string $password
-    ): void
-    {
+    ): void {
         if (
             preg_match(
                 '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[a-zA-Z])' .
@@ -47,8 +45,7 @@ class UserValidation implements UserValidationInterface
     public function validateUserId(
         ServerRequestInterface $request,
         string $userId
-    ): void
-    {
+    ): void {
         if (
             preg_match(
                 '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]' .

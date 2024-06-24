@@ -21,8 +21,7 @@ class UserController
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $urlParam
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $userShowed = json_encode(
             $this->userBusiness->getUser(
                 $request,
@@ -37,8 +36,7 @@ class UserController
     public function listUsers(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $usersListed = ['users' => $this->userBusiness->listUsers()];
         $usersListed = json_encode($usersListed);
         $response->getBody()->write($usersListed);
@@ -49,8 +47,7 @@ class UserController
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $urlParam
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $userUpdated = json_encode(
             $this->userBusiness->updateUser(
                 $request,
@@ -67,8 +64,7 @@ class UserController
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $urlParam
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $userDeleted = [
             'user' => $urlParam['id'],
             'deleted' => $this->userBusiness->deleteUser(

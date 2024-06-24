@@ -21,8 +21,7 @@ class AuthenticationException extends HttpSpecializedException
         string $title,
         string $message = 'Authentication exception.',
         string $description = 'Your request dont have a valid Token.'
-    )
-    {
+    ) {
         $this->request = $request;
         $this->code = $code;
         $this->title = $title;

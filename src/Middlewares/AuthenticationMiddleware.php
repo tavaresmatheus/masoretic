@@ -16,8 +16,7 @@ final class AuthenticationMiddleware
     public function __invoke(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $secretJwtKey = getenv('SECRET_JWT_KEY');
         $jwtAlgorithm = getenv('JWT_ALGORITHM');
 

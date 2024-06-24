@@ -21,5 +21,8 @@
         "firebase/php-jwt": "^6.10",
         "sendgrid/sendgrid": "^8.1",
         "doctrine/migrations": "^3.7"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "*"
     }
 }

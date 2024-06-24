@@ -14,16 +14,14 @@ class AuthenticationController
 
     public function __construct(
         AuthenticationBusinessInterface $authenticationBusiness
-    )
-    {
+    ) {
         $this->authenticationBusiness = $authenticationBusiness;
     }
 
     public function authenticate(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $credentials = $request->getParsedBody();
         $jwt = $this->authenticationBusiness->authenticate(
             $request,
@@ -40,8 +38,7 @@ class AuthenticationController
     public function register(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $userCreated = json_encode(
             $this->authenticationBusiness->register(
                 $request,
@@ -57,8 +54,7 @@ class AuthenticationController
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $urlParam
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $emailConfirmated = $this->authenticationBusiness->confirmEmail(
             $request,
             $urlParam['activationHash']
