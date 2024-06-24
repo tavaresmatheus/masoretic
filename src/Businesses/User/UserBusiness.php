@@ -22,6 +22,10 @@ class UserBusiness implements UserBusinessInterface
         $this->userValidation = $userValidation;
     }
 
+    /**
+     * @param string $userId
+     * @return array<string, mixed>
+     */
     public function getUser(
         ServerRequestInterface $request,
         string $userId
@@ -39,6 +43,9 @@ class UserBusiness implements UserBusinessInterface
         return $user;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function listUsers(): array
     {
         $users = $this->userRepository->list();
@@ -50,6 +57,11 @@ class UserBusiness implements UserBusinessInterface
         return $users;
     }
 
+    /**
+     * @param string $userId
+     * @param array<string, string> $attributes
+     * @return array<string, mixed>
+     */
     public function updateUser(
         ServerRequestInterface $request,
         string $userId,

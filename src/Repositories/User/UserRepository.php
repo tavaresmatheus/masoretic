@@ -15,6 +15,10 @@ class UserRepository implements UserRepositoryInterface
         $this->database = $database;
     }
 
+    /**
+     * @param array<string, string> $user
+     * @return int
+     */
     public function create(array $user): int
     {
         try {
@@ -42,6 +46,10 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
+    /**
+     * @param string $userId
+     * @return array<string, mixed>
+     */
     public function load(string $userId): array
     {
         $result = $this->database->getQueryBuilder()
@@ -60,6 +68,10 @@ class UserRepository implements UserRepositoryInterface
         return $result;
     }
 
+    /**
+     * @param string $email
+     * @return array<string, mixed>
+     */
     public function loadByEmail(string $email): array
     {
         $result = $this->database->getQueryBuilder()
@@ -78,6 +90,10 @@ class UserRepository implements UserRepositoryInterface
         return $result;
     }
 
+    /**
+     * @param string $activationHash
+     * @return array<string, mixed>
+     */
     public function loadByActivationHash(string $activationHash): array
     {
         $result = $this->database->getQueryBuilder()
@@ -87,7 +103,7 @@ class UserRepository implements UserRepositoryInterface
             ->andWhere('activation_hash = :activationHash')
             ->setParameter('deleted', 0)
             ->setParameter('activationHash', $activationHash)
-            ->fetchAllAssociative();
+            ->fetchAssociative();
 
         if ($result === false) {
             return [];
@@ -96,6 +112,9 @@ class UserRepository implements UserRepositoryInterface
         return $result;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function list(): array
     {
         return $this->database->getQueryBuilder()
@@ -106,6 +125,10 @@ class UserRepository implements UserRepositoryInterface
             ->fetchAllAssociative();
     }
 
+    /**
+     * @param array<string, string> $user
+     * @return array<string, mixed>
+     */
     public function update(array $user): array
     {
         $this->database->getQueryBuilder()
@@ -127,6 +150,10 @@ class UserRepository implements UserRepositoryInterface
         return $this->load($user['userId']);
     }
 
+    /**
+     * @param string $userId
+     * @return int
+     */
     public function delete(string $userId): int
     {
         return $this->database->getQueryBuilder()

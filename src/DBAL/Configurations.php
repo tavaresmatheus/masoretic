@@ -6,6 +6,9 @@ namespace Masoretic\DBAL;
 
 class Configurations
 {
+    /**
+     * @var array<string, string>
+     */
     protected array $databaseSettings;
 
     public function __construct()
@@ -19,7 +22,10 @@ class Configurations
         ];
     }
 
-    public function getDatabaseSettings(): array
+    /**
+     * @return mixed
+     */
+    public function getDatabaseSettings(): mixed
     {
         return $this->databaseSettings;
     }

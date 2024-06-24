@@ -14,6 +14,10 @@ interface AuthenticationBusinessInterface
         string $password
     ): string;
 
+    /**
+     * @param array<string, string> $attributes
+     * @return array<string, mixed>
+     */
     public function register(
         ServerRequestInterface $request,
         array $attributes

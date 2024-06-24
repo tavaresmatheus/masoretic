@@ -17,6 +17,9 @@ class UserController
         $this->userBusiness = $userBusiness;
     }
 
+    /**
+     * @param array<string, string> $urlParam
+     */
     public function showUser(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -43,6 +46,9 @@ class UserController
         return $response;
     }
 
+    /**
+     * @param array<string, string> $urlParam
+     */
     public function updateUser(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -60,6 +66,9 @@ class UserController
         return $response;
     }
 
+    /**
+     * @param array<string, string> $urlParam
+     */
     public function deleteUser(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -69,8 +78,7 @@ class UserController
             'user' => $urlParam['id'],
             'deleted' => $this->userBusiness->deleteUser(
                 $request,
-                $urlParam['id'],
-                $request->getParsedBody()
+                $urlParam['id']
             )
         ];
 

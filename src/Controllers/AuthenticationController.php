@@ -50,6 +50,9 @@ class AuthenticationController
         return $response;
     }
 
+    /**
+     * @param array<string, string> $urlParam
+     */
     public function emailConfirmation(
         ServerRequestInterface $request,
         ResponseInterface $response,

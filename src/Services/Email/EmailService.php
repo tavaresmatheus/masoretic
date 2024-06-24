@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Masoretic\Services\Email;
 
+use Exception;
 use SendGrid;
 use SendGrid\Mail\Mail;
 
@@ -29,7 +30,7 @@ class EmailService implements EmailServiceInterface
             $response = $sendGrid->send($email);
             return $response->statusCode();
         } catch (\Exception $e) {
-            echo 'Caught exception: ' . $e->getMessage() . "\n";
+            throw new $e();
         }
     }
 }

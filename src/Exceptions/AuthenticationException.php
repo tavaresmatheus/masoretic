@@ -10,8 +10,17 @@ use Slim\Exception\HttpSpecializedException;
 class AuthenticationException extends HttpSpecializedException
 {
     protected ServerRequestInterface $request;
+
+    /**
+     * @var int
+     */
     protected $code = 403;
+
+    /**
+     * @var string
+     */
     protected $message = 'Authentication exception.';
+
     protected string $title = '403 Invalid/Expired token.';
     protected string $description = 'Your request dont have a valid Token.';
 

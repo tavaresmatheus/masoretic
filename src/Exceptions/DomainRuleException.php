@@ -10,8 +10,17 @@ use Slim\Exception\HttpSpecializedException;
 class DomainRuleException extends HttpSpecializedException
 {
     protected ServerRequestInterface $request;
+
+    /**
+     * @var int
+     */
     protected $code = 422;
+
+    /**
+     * @var string
+     */
     protected $message = 'Domain rule exception.';
+
     protected string $title = '422 Domain rule exception.';
     protected string $description = 'Your request dont obey the domain rules.';
 

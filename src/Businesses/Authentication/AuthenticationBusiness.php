@@ -49,8 +49,8 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
             );
         }
 
-        $secretJwtKey = getenv('SECRET_JWT_KEY');
-        $jwtAlgorithm = getenv('JWT_ALGORITHM');
+        $secretJwtKey = is_string(getenv('SECRET_JWT_KEY')) ? getenv('SECRET_JWT_KEY') : '';
+        $jwtAlgorithm = is_string(getenv('JWT_ALGORITHM')) ? getenv('JWT_ALGORITHM') : '';
 
         $payload = [
             'iis' => getenv('APP_URL'),
@@ -64,6 +64,10 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
         return JWT::encode($payload, $secretJwtKey, $jwtAlgorithm);
     }
 
+    /**
+     * @param array<string, string> $attributes
+     * @return array<string, mixed>
+     */
     public function register(
         ServerRequestInterface $request,
         array $attributes
@@ -88,21 +92,12 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
         $this->userRepository->create($user);
 
         if (getenv('APP_ENV') !== 'local') {
-            $emailTemplatePath = __DIR__ .
-                '/../../../templates/email-confirmation-template.html';
-            $emailTemplate = fopen($emailTemplatePath, 'r');
-            $emailTemplate = fread($emailTemplate, filesize($emailTemplatePath));
+            $emailTemplatePath = __DIR__ . '/../../../templates/email-confirmation-template.html';
+
+            $emailTemplate = file_get_contents($emailTemplatePath);
             $email = str_replace('{{userName}}', $user['name'], $emailTemplate);
-            $email = str_replace(
-                '{{activationHash}}',
-                $user['activationHash'],
-                $email
-            );
-            $email = str_replace(
-                '{{linkToConfirm}}',
-                getenv('APP_URL') . '/api/confirm/' . $user['activationHash'],
-                $email
-            );
+            $email = str_replace('{{activationHash}}', $user['activationHash'], $email);
+            $email = str_replace('{{linkToConfirm}}', getenv('APP_URL') . '/api/confirm/' . $user['activationHash'], $email);
 
             $this->emailService->sendConfirmationEmail(
                 $user['email'],
