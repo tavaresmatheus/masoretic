@@ -7,25 +7,25 @@ namespace Masoretic\DBAL;
 class Configurations
 {
     /**
-     * @var array<string, string>
+     * @var array{dbname: string, user: string, password: string, host: string, driver: 'pdo_mysql'}
      */
     protected array $databaseSettings;
 
     public function __construct()
     {
         $this->databaseSettings = [
-            'dbname' => getenv('MYSQL_DATABASE'),
-            'user' => getenv('MYSQL_USER'),
-            'password' => getenv('MYSQL_ROOT_PASSWORD'),
+            'dbname' => is_string(getenv('MYSQL_DATABASE')) ? getenv('MYSQL_DATABASE') : '',
+            'user' => is_string(getenv('MYSQL_USER')) ? getenv('MYSQL_USER') : '',
+            'password' => is_string(getenv('MYSQL_ROOT_PASSWORD')) ? getenv('MYSQL_ROOT_PASSWORD') : '',
             'host' => 'masoretic-mariadb',
             'driver' => 'pdo_mysql',
         ];
     }
 
     /**
-     * @return mixed
+     * @return array{dbname: string, user: string, password: string, host: string, driver: 'pdo_mysql'}
      */
-    public function getDatabaseSettings(): mixed
+    public function getDatabaseSettings(): array
     {
         return $this->databaseSettings;
     }

@@ -22,14 +22,14 @@ class AuthenticationController
         ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
-        $credentials = $request->getParsedBody();
+        $credentials = (array) $request->getParsedBody();
         $jwt = $this->authenticationBusiness->authenticate(
             $request,
             $credentials['email'],
             $credentials['password']
         );
 
-        $authenticated = json_encode(['authorized' => true, 'token' => $jwt]);
+        $authenticated = json_encode(['authorized' => true, 'token' => $jwt], JSON_THROW_ON_ERROR);
         $response->getBody()->write($authenticated);
 
         return $response;
@@ -42,8 +42,9 @@ class AuthenticationController
         $userCreated = json_encode(
             $this->authenticationBusiness->register(
                 $request,
-                $request->getParsedBody()
-            )
+                (array) $request->getParsedBody()
+            ),
+            JSON_THROW_ON_ERROR
         );
 
         $response->getBody()->write($userCreated);
@@ -64,7 +65,8 @@ class AuthenticationController
         );
 
         $emailConfirmated = json_encode(
-            ['emailConfirmated' => $emailConfirmated]
+            ['emailConfirmated' => $emailConfirmated],
+            JSON_THROW_ON_ERROR
         );
 
         $response->getBody()->write($emailConfirmated);

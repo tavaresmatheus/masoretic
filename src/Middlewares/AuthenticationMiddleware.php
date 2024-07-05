@@ -17,8 +17,8 @@ final class AuthenticationMiddleware
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        $secretJwtKey = getenv('SECRET_JWT_KEY');
-        $jwtAlgorithm = getenv('JWT_ALGORITHM');
+        $secretJwtKey = is_string(getenv('SECRET_JWT_KEY')) ? getenv('SECRET_JWT_KEY') : '';
+        $jwtAlgorithm = is_string(getenv('JWT_ALGORITHM')) ? getenv('JWT_ALGORITHM') : '';
 
         if (empty($request->getHeader('Authorization'))) {
             throw new AuthenticationException(

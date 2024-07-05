@@ -28,8 +28,9 @@ class UserController
         $userShowed = json_encode(
             $this->userBusiness->getUser(
                 $request,
-                $urlParam['id']
-            )
+                (int) $urlParam['id']
+            ),
+            JSON_THROW_ON_ERROR
         );
 
         $response->getBody()->write($userShowed);
@@ -41,7 +42,7 @@ class UserController
         ResponseInterface $response
     ): ResponseInterface {
         $usersListed = ['users' => $this->userBusiness->listUsers()];
-        $usersListed = json_encode($usersListed);
+        $usersListed = json_encode($usersListed, JSON_THROW_ON_ERROR);
         $response->getBody()->write($usersListed);
         return $response;
     }
@@ -57,9 +58,10 @@ class UserController
         $userUpdated = json_encode(
             $this->userBusiness->updateUser(
                 $request,
-                $urlParam['id'],
-                $request->getParsedBody()
-            )
+                (int) $urlParam['id'],
+                (array) $request->getParsedBody()
+            ),
+            JSON_THROW_ON_ERROR
         );
 
         $response->getBody()->write($userUpdated);
@@ -78,11 +80,11 @@ class UserController
             'user' => $urlParam['id'],
             'deleted' => $this->userBusiness->deleteUser(
                 $request,
-                $urlParam['id']
+                (int) $urlParam['id']
             )
         ];
 
-        $userDeleted = json_encode($userDeleted);
+        $userDeleted = json_encode($userDeleted, JSON_THROW_ON_ERROR);
 
         $response->getBody()->write($userDeleted);
         return $response;

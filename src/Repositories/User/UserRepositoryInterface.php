@@ -15,10 +15,10 @@ interface UserRepositoryInterface
     public function create(array $user): int;
 
     /**
-     * @param string $userId
+     * @param int $userId
      * @return array<string, mixed>
      */
-    public function load(string $userId): array;
+    public function load(int $userId): array;
 
     /**
      * @param string $email
@@ -38,14 +38,14 @@ interface UserRepositoryInterface
     public function list(): array;
 
     /**
-     * @param array<string, string> $user
+     * @param array<string, string|int> $user
      * @return array<string, mixed>
      */
     public function update(array $user): array;
 
     /**
-     * @param string $userId
+     * @param int $userId
      * @return int
      */
-    public function delete(string $userId): int;
+    public function delete(int $userId): int;
 }

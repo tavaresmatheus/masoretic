@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Masoretic\Businesses\Authentication;
 
+use DomainException;
 use Firebase\JWT\JWT;
 use Masoretic\Exceptions\DomainRuleException;
 use Masoretic\Repositories\User\UserRepositoryInterface;
@@ -95,9 +96,17 @@ class AuthenticationBusiness implements AuthenticationBusinessInterface
             $emailTemplatePath = __DIR__ . '/../../../templates/email-confirmation-template.html';
 
             $emailTemplate = file_get_contents($emailTemplatePath);
+            if ($emailTemplate === false) {
+                throw new DomainException('Email template doesn\'t exists');
+            }
+
             $email = str_replace('{{userName}}', $user['name'], $emailTemplate);
             $email = str_replace('{{activationHash}}', $user['activationHash'], $email);
-            $email = str_replace('{{linkToConfirm}}', getenv('APP_URL') . '/api/confirm/' . $user['activationHash'], $email);
+            $email = str_replace(
+                '{{linkToConfirm}}',
+                getenv('APP_URL') . '/api/confirm/' . $user['activationHash'],
+                $email
+            );
 
             $this->emailService->sendConfirmationEmail(
                 $user['email'],

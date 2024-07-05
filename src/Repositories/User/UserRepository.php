@@ -22,7 +22,7 @@ class UserRepository implements UserRepositoryInterface
     public function create(array $user): int
     {
         try {
-            return $this->database->getQueryBuilder()
+            return (int) $this->database->getQueryBuilder()
             ->insert('users')
             ->values(
                 [
@@ -47,10 +47,10 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param string $userId
+     * @param int $userId
      * @return array<string, mixed>
      */
-    public function load(string $userId): array
+    public function load(int $userId): array
     {
         $result = $this->database->getQueryBuilder()
             ->select('user_id, name, email', 'password, active')
@@ -126,7 +126,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param array<string, string> $user
+     * @param array<string, string|int> $user
      * @return array<string, mixed>
      */
     public function update(array $user): array
@@ -147,16 +147,16 @@ class UserRepository implements UserRepositoryInterface
             ->setParameter('user_id', $user['userId'])
             ->executeStatement();
 
-        return $this->load($user['userId']);
+        return $this->load((int) $user['userId']);
     }
 
     /**
-     * @param string $userId
+     * @param int $userId
      * @return int
      */
-    public function delete(string $userId): int
+    public function delete(int $userId): int
     {
-        return $this->database->getQueryBuilder()
+        return (int) $this->database->getQueryBuilder()
             ->update('users')
             ->set('deleted', ':deleted')
             ->where('user_id = :user_id')

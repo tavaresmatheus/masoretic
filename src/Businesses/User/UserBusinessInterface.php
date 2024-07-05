@@ -9,12 +9,12 @@ use Psr\Http\Message\ServerRequestInterface;
 interface UserBusinessInterface
 {
     /**
-     * @param string $userId
+     * @param int $userId
      * @return array<string, mixed>
      */
     public function getUser(
         ServerRequestInterface $request,
-        string $userId
+        int $userId
     ): array;
 
     /**
@@ -23,18 +23,18 @@ interface UserBusinessInterface
     public function listUsers(): array;
 
     /**
-     * @param string $userId
+     * @param int $userId
      * @param array<string, string> $attributes
      * @return array<string, mixed>
      */
     public function updateUser(
         ServerRequestInterface $request,
-        string $userId,
+        int $userId,
         array $attributes
     ): array;
 
     public function deleteUser(
         ServerRequestInterface $request,
-        string $userId
+        int $userId
     ): bool;
 }

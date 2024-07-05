@@ -44,15 +44,9 @@ class UserValidation implements UserValidationInterface
 
     public function validateUserId(
         ServerRequestInterface $request,
-        string $userId
+        int $userId
     ): void {
-        if (
-            preg_match(
-                '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]' .
-                '{4}-[0-9A-Fa-f]{12}$/',
-                $userId
-            ) !== 1
-        ) {
+        if (filter_var($userId, FILTER_VALIDATE_INT)) {
             throw new DomainRuleException($request, 422, 'Invalid user id.');
         }
     }

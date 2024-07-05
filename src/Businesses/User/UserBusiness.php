@@ -23,12 +23,12 @@ class UserBusiness implements UserBusinessInterface
     }
 
     /**
-     * @param string $userId
+     * @param int $userId
      * @return array<string, mixed>
      */
     public function getUser(
         ServerRequestInterface $request,
-        string $userId
+        int $userId
     ): array {
         $this->userValidation->validateUserId($request, $userId);
 
@@ -58,13 +58,13 @@ class UserBusiness implements UserBusinessInterface
     }
 
     /**
-     * @param string $userId
+     * @param int $userId
      * @param array<string, string> $attributes
      * @return array<string, mixed>
      */
     public function updateUser(
         ServerRequestInterface $request,
-        string $userId,
+        int $userId,
         array $attributes
     ): array {
         $this->userValidation->validateUserId($request, $userId);
@@ -94,7 +94,7 @@ class UserBusiness implements UserBusinessInterface
             'userId' => $user['user_id'],
             'name' => $user['name'],
             'email' => $user['email'],
-            'password' => password_hash($user['password'], PASSWORD_DEFAULT),
+            'password' => password_hash((string) $user['password'], PASSWORD_DEFAULT),
             'active' => $user['active']
         ];
 
@@ -107,7 +107,7 @@ class UserBusiness implements UserBusinessInterface
 
     public function deleteUser(
         ServerRequestInterface $request,
-        string $userId
+        int $userId
     ): bool {
         $this->userValidation->validateUserId($request, $userId);
 

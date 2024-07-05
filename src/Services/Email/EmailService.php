@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Masoretic\Services\Email;
 
-use Exception;
 use SendGrid;
 use SendGrid\Mail\Mail;
 
@@ -24,13 +23,13 @@ class EmailService implements EmailServiceInterface
         $email->setSubject($subject);
         $email->addTo($to, $name);
         $email->addContent('text/html', $body);
-        $sendGrid = new SendGrid(getenv('SENDGRID_API_KEY'));
+        $sendGrid = new SendGrid(is_string(getenv('SENDGRID_API_KEY')) ? getenv('SENDGRID_API_KEY') : '');
 
         try {
             $response = $sendGrid->send($email);
             return $response->statusCode();
         } catch (\Exception $e) {
-            throw new $e();
+            throw new \Exception($e->getMessage());
         }
     }
 }

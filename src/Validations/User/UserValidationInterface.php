@@ -20,6 +20,6 @@ interface UserValidationInterface
 
     public function validateUserId(
         ServerRequestInterface $request,
-        string $userId
+        int $userId
     ): void;
 }
