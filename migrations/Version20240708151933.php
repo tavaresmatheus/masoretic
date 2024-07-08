@@ -33,6 +33,7 @@ final class Version20240708151933 extends AbstractMigration
         $booksTable->addColumn('edition', 'string', ['length' => 255, 'notnull' => false]);
         $booksTable->addColumn('price', 'integer', ['length' => 11, 'notnull' => true, 'default' => 0]);
         $booksTable->addColumn('acquisition_source', 'string', ['length' => 255, 'notnull' => false]);
+        $booksTable->addColumn('deleted', 'boolean');
 
         $booksTable->addColumn(
             'created_at',

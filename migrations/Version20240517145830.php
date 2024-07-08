@@ -21,9 +21,7 @@ final class Version20240517145830 extends AbstractMigration
         $usersTable->addColumn('name', 'string', ['length' => 255]);
         $usersTable->addColumn('email', 'string', ['length' => 320]);
         $usersTable->addColumn('password', 'string', ['length' => 255]);
-        $usersTable->addColumn(
-            'activation_hash', 'string', ['length' => 255, 'notnull' => true]
-        );
+        $usersTable->addColumn('activation_hash', 'string', ['length' => 255, 'notnull' => true]);
         $usersTable->addColumn('active', 'boolean');
         $usersTable->addColumn('deleted', 'boolean');
         $usersTable->addColumn(

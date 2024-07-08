@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Masoretic\Controllers\AuthenticationController;
+use Masoretic\Controllers\CategoryController;
 use Masoretic\Controllers\UserController;
 use Masoretic\Middlewares\AuthenticationMiddleware;
 use Slim\Routing\RouteCollectorProxy;
@@ -10,9 +11,14 @@ use Slim\Routing\RouteCollectorProxy;
 $app->group('/api', function (RouteCollectorProxy $group) {
     $group->group('/users', function (RouteCollectorProxy $group) {
         $group->get('/{id}', UserController::class . ':showUser');
-        $group->get('/', UserController::class . ':listUsers');
+        $group->get('', UserController::class . ':listUsers');
         $group->patch('/{id}', UserController::class . ':updateUser');
         $group->delete('/{id}', UserController::class . ':deleteUser');
+    })->add(new AuthenticationMiddleware());
+
+    $group->group('/categories', function (RouteCollectorProxy $group) {
+        $group->post('', CategoryController::class . ':createCategory');
+        $group->get('', CategoryController::class . ':listCategories');
     })->add(new AuthenticationMiddleware());
 
     $group->post('/login', AuthenticationController::class . ':authenticate');

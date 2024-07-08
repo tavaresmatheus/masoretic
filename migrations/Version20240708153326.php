@@ -20,6 +20,7 @@ final class Version20240708153326 extends AbstractMigration
         $booksCategoriesTable->addColumn('book_category_id', 'bigint', ['autoincrement' => true]);
         $booksCategoriesTable->addColumn('book_id', 'bigint', ['notnull' => true]);
         $booksCategoriesTable->addColumn('category_id', 'bigint', ['notnull' => true]);
+        $booksCategoriesTable->addColumn('deleted', 'boolean');
 
         $booksCategoriesTable->addColumn(
             'created_at',

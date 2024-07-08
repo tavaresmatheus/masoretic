@@ -19,6 +19,7 @@ final class Version20240708151225 extends AbstractMigration
         $categoriesTable = $schema->createTable('categories');
         $categoriesTable->addColumn('category_id', 'bigint', ['autoincrement' => true]);
         $categoriesTable->addColumn('name', 'string', ['length' => 255, 'notnull' => true]);
+        $categoriesTable->addColumn('deleted', 'boolean');
 
         $categoriesTable->addColumn(
             'created_at',
