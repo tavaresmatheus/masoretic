@@ -19,6 +19,8 @@ $app->group('/api', function (RouteCollectorProxy $group) {
     $group->group('/categories', function (RouteCollectorProxy $group) {
         $group->post('', CategoryController::class . ':createCategory');
         $group->get('', CategoryController::class . ':listCategories');
+        $group->get('/{id}', CategoryController::class . ':showCategory');
+        $group->patch('/{id}', CategoryController::class . ':updateCategory');
     })->add(new AuthenticationMiddleware());
 
     $group->post('/login', AuthenticationController::class . ':authenticate');

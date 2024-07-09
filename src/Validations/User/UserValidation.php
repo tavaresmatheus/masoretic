@@ -46,7 +46,7 @@ class UserValidation implements UserValidationInterface
         ServerRequestInterface $request,
         int $userId
     ): void {
-        if (filter_var($userId, FILTER_VALIDATE_INT)) {
+        if ($userId <= 0) {
             throw new DomainRuleException($request, 422, 'Invalid user id.');
         }
     }

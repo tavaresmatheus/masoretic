@@ -19,6 +19,8 @@ use Masoretic\Repositories\User\UserRepository;
 use Masoretic\Repositories\User\UserRepositoryInterface;
 use Masoretic\Services\Email\EmailService;
 use Masoretic\Services\Email\EmailServiceInterface;
+use Masoretic\Validations\Category\CategoryValidation;
+use Masoretic\Validations\Category\CategoryValidationInterface;
 use Masoretic\Validations\User\UserValidation;
 use Masoretic\Validations\User\UserValidationInterface;
 
@@ -39,5 +41,6 @@ return [
     EmailServiceInterface::class => autowire(EmailService::class),
     'CategoryController' => create(CategoryController::class),
     CategoryRepositoryInterface::class => autowire(CategoryRepository::class),
-    CategoryBusinessInterface::class => autowire(CategoryBusiness::class)
+    CategoryBusinessInterface::class => autowire(CategoryBusiness::class),
+    CategoryValidationInterface::class => autowire(CategoryValidation::class)
 ];

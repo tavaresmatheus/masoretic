@@ -42,4 +42,45 @@ class CategoryController
         $response->getBody()->write($categoriesListed);
         return $response;
     }
+
+    /**
+     * @param array<string, string> $urlParam
+     */
+    public function showCategory(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $urlParam
+    ): ResponseInterface {
+        $categoryShowed = json_encode(
+            $this->categoryBusiness->getCategory(
+                $request,
+                (int) $urlParam['id']
+            ),
+            JSON_THROW_ON_ERROR
+        );
+
+        $response->getBody()->write($categoryShowed);
+        return $response;
+    }
+
+    /**
+     * @param array<string, string> $urlParam
+     */
+    public function updateCategory(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $urlParam
+    ): ResponseInterface {
+        $categoryUpdated = json_encode(
+            $this->categoryBusiness->updateCategory(
+                $request,
+                (int) $urlParam['id'],
+                (array) $request->getParsedBody()
+            ),
+            JSON_THROW_ON_ERROR
+        );
+
+        $response->getBody()->write($categoryUpdated);
+        return $response;
+    }
 }

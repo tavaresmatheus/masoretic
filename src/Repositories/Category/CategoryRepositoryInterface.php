@@ -28,4 +28,10 @@ interface CategoryRepositoryInterface
      * @return array<int, array<string, mixed>>
      */
     public function list(): array;
+
+    /**
+     * @param array<string, string|int> $category
+     * @return array<string, mixed>
+     */
+    public function update(array $category): array;
 }

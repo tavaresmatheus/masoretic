@@ -94,4 +94,23 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->setParameter('deleted', 0)
             ->fetchAllAssociative();
     }
+
+    /**
+     * @param array<string, string|int> $category
+     * @return array<string, mixed>
+     */
+    public function update(array $category): array
+    {
+        $this->database->getQueryBuilder()
+            ->update('categories')
+            ->set('name', ':name')
+            ->where('deleted = :deleted')
+            ->andWhere('category_id = :categoryId')
+            ->setParameter('name', $category['name'])
+            ->setParameter('deleted', 0)
+            ->setParameter('categoryId', $category['category_id'])
+            ->executeStatement();
+
+        return $this->load((int) $category['category_id']);
+    }
 }
