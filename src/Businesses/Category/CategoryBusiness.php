@@ -97,6 +97,29 @@ class CategoryBusiness implements CategoryBusinessInterface
 
     /**
      * @param ServerRequestInterface $request
+     * @param int $categoryId
+     * @return bool
+     */
+    public function deleteCategory(ServerRequestInterface $request, int $categoryId): bool
+    {
+        $this->categoryValidation->validateCategoryId($request, $categoryId);
+
+        $category = $this->categoryRepository->load($categoryId);
+        if ($category === []) {
+            throw new DomainRuleException($request, 404, 'Category don\'t exists.');
+        }
+
+        $deletion = $this->categoryRepository->delete($categoryId);
+
+        if ($deletion <= 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
      * @param string $categoryName
      * @return void
      */

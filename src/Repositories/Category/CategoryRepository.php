@@ -48,9 +48,9 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->select('category_id, name')
             ->from('categories')
             ->where('deleted = :deleted')
-            ->andWhere('category_id = :category_id')
+            ->andWhere('category_id = :categoryId')
             ->setParameter('deleted', 0)
-            ->setParameter('category_id', $categoryId)
+            ->setParameter('categoryId', $categoryId)
             ->fetchAssociative();
 
         if ($result === false) {
@@ -112,5 +112,20 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->executeStatement();
 
         return $this->load((int) $category['category_id']);
+    }
+
+    /**
+     * @param int $categoryId
+     * @return int
+     */
+    public function delete(int $categoryId): int
+    {
+        return (int) $this->database->getQueryBuilder()
+            ->update('categories')
+            ->set('deleted', ':deleted')
+            ->where('category_id = :categoryId')
+            ->setParameter('deleted', 1)
+            ->setParameter('categoryId', $categoryId)
+            ->executeStatement();
     }
 }

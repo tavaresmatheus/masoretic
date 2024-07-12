@@ -34,4 +34,11 @@ interface CategoryBusinessInterface
      * @return array<string, mixed>
      */
     public function updateCategory(ServerRequestInterface $request, int $categoryId, array $attributes): array;
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param int $categoryId
+     * @return bool
+     */
+    public function deleteCategory(ServerRequestInterface $request, int $categoryId): bool;
 }

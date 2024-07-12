@@ -83,4 +83,26 @@ class CategoryController
         $response->getBody()->write($categoryUpdated);
         return $response;
     }
+
+    /**
+     * @param array<string, string> $urlParam
+     */
+    public function deleteCategory(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $urlParam
+    ): ResponseInterface {
+        $categoryDeleted = [
+            'category' => $urlParam['id'],
+            'deleted' => $this->categoryBusiness->deleteCategory(
+                $request,
+                (int) $urlParam['id']
+            )
+        ];
+
+        $categoryDeleted = json_encode($categoryDeleted, JSON_THROW_ON_ERROR);
+
+        $response->getBody()->write($categoryDeleted);
+        return $response;
+    }
 }

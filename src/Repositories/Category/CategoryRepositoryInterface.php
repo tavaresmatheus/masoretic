@@ -34,4 +34,10 @@ interface CategoryRepositoryInterface
      * @return array<string, mixed>
      */
     public function update(array $category): array;
+
+    /**
+     * @param int $categoryId
+     * @return int
+     */
+    public function delete(int $categoryId): int;
 }

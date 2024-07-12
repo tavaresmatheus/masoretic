@@ -21,6 +21,7 @@ $app->group('/api', function (RouteCollectorProxy $group) {
         $group->get('', CategoryController::class . ':listCategories');
         $group->get('/{id}', CategoryController::class . ':showCategory');
         $group->patch('/{id}', CategoryController::class . ':updateCategory');
+        $group->delete('/{id}', CategoryController::class . ':deleteCategory');
     })->add(new AuthenticationMiddleware());
 
     $group->post('/login', AuthenticationController::class . ':authenticate');
