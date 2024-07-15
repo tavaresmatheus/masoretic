@@ -4,21 +4,28 @@ declare(strict_types=1);
 
 use Masoretic\Businesses\Authentication\AuthenticationBusiness;
 use Masoretic\Businesses\Authentication\AuthenticationBusinessInterface;
+use Masoretic\Businesses\Book\BookBusiness;
+use Masoretic\Businesses\Book\BookBusinessInterface;
 use Masoretic\Businesses\Category\CategoryBusiness;
 use Masoretic\Businesses\Category\CategoryBusinessInterface;
 use Masoretic\Businesses\User\UserBusiness;
 use Masoretic\Businesses\User\UserBusinessInterface;
 use Masoretic\Controllers\AuthenticationController;
+use Masoretic\Controllers\BookController;
 use Masoretic\Controllers\CategoryController;
 use Masoretic\Controllers\UserController;
 use Masoretic\DBAL\Configurations;
 use Masoretic\DBAL\Database;
+use Masoretic\Repositories\Book\BookRepository;
+use Masoretic\Repositories\Book\BookRepositoryInterface;
 use Masoretic\Repositories\Category\CategoryRepository;
 use Masoretic\Repositories\Category\CategoryRepositoryInterface;
 use Masoretic\Repositories\User\UserRepository;
 use Masoretic\Repositories\User\UserRepositoryInterface;
 use Masoretic\Services\Email\EmailService;
 use Masoretic\Services\Email\EmailServiceInterface;
+use Masoretic\Validations\Book\BookValidation;
+use Masoretic\Validations\Book\BookValidationInterface;
 use Masoretic\Validations\Category\CategoryValidation;
 use Masoretic\Validations\Category\CategoryValidationInterface;
 use Masoretic\Validations\User\UserValidation;
@@ -42,5 +49,9 @@ return [
     'CategoryController' => create(CategoryController::class),
     CategoryRepositoryInterface::class => autowire(CategoryRepository::class),
     CategoryBusinessInterface::class => autowire(CategoryBusiness::class),
-    CategoryValidationInterface::class => autowire(CategoryValidation::class)
+    CategoryValidationInterface::class => autowire(CategoryValidation::class),
+    'BookController' => create(BookController::class),
+    BookRepositoryInterface::class => autowire(BookRepository::class),
+    BookBusinessInterface::class => autowire(BookBusiness::class),
+    BookValidationInterface::class => autowire(BookValidation::class)
 ];

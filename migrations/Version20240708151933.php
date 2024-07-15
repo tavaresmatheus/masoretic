@@ -20,11 +20,11 @@ final class Version20240708151933 extends AbstractMigration
         $booksTable->addColumn('book_id', 'bigint', ['autoincrement' => true]);
         $booksTable->addColumn('title', 'string', ['length' => 255, 'notnull' => true]);
         $booksTable->addColumn('authors', 'string', ['length' => 255, 'notnull' => true]);
-        $booksTable->addColumn('isbn', 'string', ['length' => 13, 'notnull' => true]);
+        $booksTable->addColumn('isbn_13', 'string', ['length' => 17, 'notnull' => true]);
         $booksTable->addColumn('publisher', 'string', ['length' => 255, 'notnull' => true]);
         $booksTable->addColumn('publication_date', 'date', ['notnull' => true]);
-        $booksTable->addColumn('description', 'string', ['length' => 255, 'notnull' => true]);
-        $booksTable->addColumn('language', 'string', ['length' => 2, 'notnull' => true]);
+        $booksTable->addColumn('description', 'text', ['notnull' => true]);
+        $booksTable->addColumn('language', 'string', ['length' => 5, 'notnull' => true]);
         $booksTable->addColumn('total_pages', 'integer', ['notnull' => true]);
         $booksTable->addColumn('stock', 'integer', ['notnull' => true]);
         $booksTable->addColumn('location', 'string', ['length' => 255, 'notnull' => false]);

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Masoretic\Controllers\AuthenticationController;
+use Masoretic\Controllers\BookController;
 use Masoretic\Controllers\CategoryController;
 use Masoretic\Controllers\UserController;
 use Masoretic\Middlewares\AuthenticationMiddleware;
@@ -22,6 +23,10 @@ $app->group('/api', function (RouteCollectorProxy $group) {
         $group->get('/{id}', CategoryController::class . ':showCategory');
         $group->patch('/{id}', CategoryController::class . ':updateCategory');
         $group->delete('/{id}', CategoryController::class . ':deleteCategory');
+    })->add(new AuthenticationMiddleware());
+
+    $group->group('/books', function (RouteCollectorProxy $group) {
+        $group->post('', BookController::class . ':createBook');
     })->add(new AuthenticationMiddleware());
 
     $group->post('/login', AuthenticationController::class . ':authenticate');
